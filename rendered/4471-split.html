@@ -42,7 +42,7 @@
         <h1>#4471 split: two causes, two tickets</h1>
         <p class="meta">
           <span>owner <b>Yushan Fernando</b></span>
-          <span class="status">proposed</span>
+          <span class="status">closed</span>
           <span>reviewed 2026-11-10</span>
         </p>
       </header>
@@ -118,6 +118,22 @@
           <code>R-41344</code>, <code>R-41620</code>. The desk's <code>desk-notes.json</code> counts
           them under <code>parser</code> and footnotes them. They stay in the parser count here;
           engineering should decide whether they need their own fix.
+        </p>
+
+        <h2>Resolution</h2>
+        <p>The desk closed #4471 on 05 Oct:</p>
+        <ul>
+          <li>
+            <strong><code>parser</code></strong> — fixed:
+            <code>fix(dates): parse dd/mm for eu locales</code>.
+          </li>
+          <li>
+            <strong><code>hint</code></strong> — won't fix: the booking-v3 form is retired.
+          </li>
+        </ul>
+        <p>
+          Both tickets are closed. The split still matters: the fix covers the parser group, and
+          the 33 hint reports stop when the form retires.
         </p>
 
         <h2>What changed</h2>

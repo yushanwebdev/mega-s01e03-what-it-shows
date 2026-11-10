@@ -20,6 +20,11 @@ really holds.
 - Five `parser` reports read as a one-day move (`R-41202`, `R-41209`, `R-41236`, `R-41344`,
   `R-41620`). The desk counts them under `parser` and footnotes them.
 
+## Resolution
+
+The desk closed #4471 on 05 Oct. `parser` is fixed (`fix(dates): parse dd/mm for eu locales`);
+`hint` won't fix because booking-v3 is retired. Both issues are closed.
+
 ## What is here
 
 ```

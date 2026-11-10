@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 split: two causes, two tickets'
 owner: Yushan Fernando
-status: proposed
+status: closed
 reviewed: 2026-11-10
 signature: v1.eyJzdWIiOiIxODE5IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTQyOTM0NzUsImV4cCI6MTc5NDM3OTg3NX0.vcWnh-Jxji49v8bReJ7sSNrvJvME41Gu2DhnLfV-0Gc
 ---
@@ -51,6 +51,16 @@ Five reports in the `parser` group read as a one-day move, not a month/day flip:
 `R-41209`, `R-41236`, `R-41344`, `R-41620`. The desk's `desk-notes.json` counts them under
 `parser` and footnotes them. They stay in the parser count here; engineering should decide
 whether they need their own fix.
+
+## Resolution
+
+The desk closed #4471 on 05 Oct:
+
+- **`parser`** — fixed: `fix(dates): parse dd/mm for eu locales`.
+- **`hint`** — won't fix: the booking-v3 form is retired.
+
+Both tickets are closed. The split still matters: the fix covers the parser group, and the 33
+hint reports stop when the form retires.
 
 ## What changed
 
