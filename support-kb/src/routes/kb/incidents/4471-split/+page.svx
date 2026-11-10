@@ -1,0 +1,60 @@
+---
+layout: runbook
+title: '#4471 split: two causes, two tickets'
+owner: Yushan Fernando
+status: proposed
+reviewed: 2026-11-10
+signature: v1.eyJzdWIiOiIxODE5IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTQyOTM0NzUsImV4cCI6MTc5NDM3OTg3NX0.vcWnh-Jxji49v8bReJ7sSNrvJvME41Gu2DhnLfV-0Gc
+---
+
+<script>
+  import SplitTable from '#lib/kb/SplitTable.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+  export let signature;
+</script>
+
+#4471 is not one issue. The incident page says **one issue, one fix queued**, but the export's
+own grouping shows **two causes** in the 412 unique reports. The desk's subject-line triage put
+them together; they need separate tickets.
+
+## What the export shows
+
+<SplitTable
+  ticket={4471}
+  tickets={{
+    parser: 'https://github.com/yushanwebdev/mega-s01e03-what-it-shows/issues/1',
+    hint: 'https://github.com/yushanwebdev/mega-s01e03-what-it-shows/issues/2',
+  }}
+/>
+
+## Two tickets
+
+The counts above are computed from the same grouping. One ticket per cause:
+
+- **`parser`** — 379 reports. The shared parser reads every date month-first; eleven tenants write day-first, so a booking for 7 May becomes an invite for 5 July. App and email always use the parser. A booking-v2 form prints `DD/MM/YYYY`, so its input also lands here.
+- **`hint`** — 33 reports. Three tenants run booking-v3, whose form prints `MM/DD/YYYY`. Their people type month-first as the hint says, and the form reads it day-first. The flip goes the other way, and the parser fix does not touch it.
+
+## Why the tags cannot decide
+
+Intake tags are guesses. In these reports, 23 `parser` reports carry the `hint` tag and 15
+`hint` reports carry the `parser` tag. The cause comes from the tenant's locale and form, as
+`causes.ts` does it, not from `meta.intakeTag`.
+
+## Counts and duplicates
+
+The export holds 427 rows but **412 unique report IDs**. `uniqueById` removes the overlap before
+grouping. Every unique report belongs to #4471, so the two tickets cover all 412.
+
+## One-day move
+
+Five reports in the `parser` group read as a one-day move, not a month/day flip: `R-41202`,
+`R-41209`, `R-41236`, `R-41344`, `R-41620`. The desk's `desk-notes.json` counts them under
+`parser` and footnotes them. They stay in the parser count here; engineering should decide
+whether they need their own fix.
+
+## What changed
+
+This page replaces the **one issue, one fix queued** note on [#4471](/kb/incidents/4471). The
+parser ticket is still needed; it is now one of two.
+
+<RenderStamp {signature} />

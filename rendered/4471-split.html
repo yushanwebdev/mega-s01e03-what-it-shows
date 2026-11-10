@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>#4471 split: two causes, two tickets · support kb</title>
+    <style>
+      :root {
+        --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
+        --accent: #2f6f5e; --warn: #b4501f; --warn-bg: #fbeee6; --note-bg: #eef5f2;
+        --mono: ui-monospace, 'Cascadia Code', Menlo, monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #171716; --fg: #ecebe6; --muted: #9c9a93; --line: #34332f;
+          --accent: #6fbfa6; --warn: #f0905d; --warn-bg: #3a2418; --note-bg: #1d2c27;
+        }
+      }
+      body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, sans-serif; }
+      table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; }
+      th, td { border-bottom: 1px solid var(--line); padding: 0.35rem 0.5rem; text-align: left; }
+      code { font-family: var(--mono); font-size: 0.88em; }
+      a { color: var(--accent); }
+      .kb { max-width: 760px; margin: 0 auto; padding: 2rem 16px 4rem; }
+      .crumb { font: 0.8rem var(--mono); text-decoration: none; color: var(--muted); }
+      h1 { margin: 0.25rem 0 0.5rem; line-height: 1.2; }
+      h2 { margin-top: 1.6rem; }
+      .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.85rem; margin: 0; }
+      .status { border: 1px solid var(--line); border-radius: 99px; padding: 0 0.6rem; }
+      .sum { font-size: 1.1rem; }
+      .tags { color: var(--muted); font-size: 0.85em; }
+      .note { color: var(--muted); font-size: 0.85em; }
+      .stamp { margin: 2rem 0 0; font: 0.85rem var(--mono); color: var(--muted); }
+      .stamp b { color: var(--accent); letter-spacing: 0.04em; }
+      footer { margin-top: 3rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+    </style>
+  </head>
+  <body>
+    <div class="kb">
+      <header>
+        <a class="crumb" href="#">support desk · kb</a>
+        <h1>#4471 split: two causes, two tickets</h1>
+        <p class="meta">
+          <span>owner <b>Yushan Fernando</b></span>
+          <span class="status">proposed</span>
+          <span>reviewed 2026-11-10</span>
+        </p>
+      </header>
+      <main>
+        <p>
+          #4471 is not one issue. The incident page says <strong>one issue, one fix queued</strong>,
+          but the export's own grouping shows <strong>two causes</strong> in the 412 unique reports.
+          The desk's subject-line triage put them together; they need separate tickets.
+        </p>
+
+        <h2>What the export shows</h2>
+        <p class="sum"><strong>412</strong> unique reports merged into #4471 · <strong>2</strong> causes</p>
+        <table>
+          <thead>
+            <tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th>ticket</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>parser</code></td>
+              <td>379</td>
+              <td class="tags">parser ×356 · hint ×23</td>
+              <td>11</td>
+              <td>2026-04-01 → 2026-10-04</td>
+              <td><a href="https://github.com/yushanwebdev/mega-s01e03-what-it-shows/issues/1">#1</a></td>
+            </tr>
+            <tr>
+              <td><code>hint</code></td>
+              <td>33</td>
+              <td class="tags">parser ×15 · hint ×18</td>
+              <td>3</td>
+              <td>2026-04-17 → 2026-09-22</td>
+              <td><a href="https://github.com/yushanwebdev/mega-s01e03-what-it-shows/issues/2">#2</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="note">5 reports read as a one-day move; counted under <code>parser</code> by tenant.</p>
+
+        <h2>Two tickets</h2>
+        <p>The counts above are computed from the same grouping. One ticket per cause:</p>
+        <ul>
+          <li>
+            <strong><code>parser</code></strong> — 379 reports. The shared parser reads every date
+            month-first; eleven tenants write day-first, so a booking for 7 May becomes an invite
+            for 5 July. App and email always use the parser. A booking-v2 form prints
+            <code>DD/MM/YYYY</code>, so its input also lands here.
+          </li>
+          <li>
+            <strong><code>hint</code></strong> — 33 reports. Three tenants run booking-v3, whose form
+            prints <code>MM/DD/YYYY</code>. Their people type month-first as the hint says, and the
+            form reads it day-first. The flip goes the other way, and the parser fix does not touch it.
+          </li>
+        </ul>
+
+        <h2>Why the tags cannot decide</h2>
+        <p>
+          Intake tags are guesses. In these reports, 23 <code>parser</code> reports carry the
+          <code>hint</code> tag and 15 <code>hint</code> reports carry the <code>parser</code> tag.
+          The cause comes from the tenant's locale and form, as <code>causes.ts</code> does it, not
+          from <code>meta.intakeTag</code>.
+        </p>
+
+        <h2>Counts and duplicates</h2>
+        <p>
+          The export holds 427 rows but <strong>412 unique report IDs</strong>.
+          <code>uniqueById</code> removes the overlap before grouping. Every unique report belongs
+          to #4471, so the two tickets cover all 412.
+        </p>
+
+        <h2>One-day move</h2>
+        <p>
+          Five reports in the <code>parser</code> group read as a one-day move, not a month/day
+          flip: <code>R-41202</code>, <code>R-41209</code>, <code>R-41236</code>,
+          <code>R-41344</code>, <code>R-41620</code>. The desk's <code>desk-notes.json</code> counts
+          them under <code>parser</code> and footnotes them. They stay in the parser count here;
+          engineering should decide whether they need their own fix.
+        </p>
+
+        <h2>What changed</h2>
+        <p>
+          This page replaces the <strong>one issue, one fix queued</strong> note on
+          <a href="#">#4471</a>. The parser ticket is still needed; it is now one of two.
+        </p>
+
+        <p class="stamp">desk ref <b>DR-G3DJ-4GAX</b></p>
+      </main>
+      <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
+    </div>
+  </body>
+</html>
